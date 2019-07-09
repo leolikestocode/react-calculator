@@ -1,3 +1,5 @@
 import React from 'react';
 
-export default (props) => <input type='text' value={props.value} />;
+export default (props) => (
+	<input type='text' className='inputControls' value={props.value} onChange={() => console.log('changeg')} />
+);

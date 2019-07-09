@@ -1,14 +1,15 @@
 import React, { Component } from 'react';
 import Display from './components/Display';
 import Button from './components/Button';
-import './calculator.css';
 
 class Calculator extends Component {
 	constructor(props) {
 		super(props);
 
 		this.state = {
-			value: '0'
+			value: '0',
+			operator: null,
+			prevValue: null
 		};
 
 		this.updateDisplay = this.updateDisplay.bind(this);
@@ -17,6 +18,39 @@ class Calculator extends Component {
 	updateDisplay(val) {
 		if (val.value === 'AC') {
 			this.setState({
+				value: '0'
+			});
+			return;
+		} else if (val.value === '=') {
+			if (this.state.operator === null) return;
+
+			if (this.state.operator === '+') {
+				this.setState({
+					value: parseInt(this.state.prevValue) + parseInt(this.state.value)
+				});
+			} else if (this.state.operator === '-') {
+				this.setState({
+					value: parseInt(this.state.prevValue) - parseInt(this.state.value)
+				});
+			} else if (this.state.operator === '*') {
+				this.setState({
+					value: parseInt(this.state.prevValue) * parseInt(this.state.value)
+				});
+			} else if (this.state.operator === '/') {
+				this.setState({
+					value: parseInt(this.state.prevValue) / parseInt(this.state.value)
+				});
+			}
+
+			this.setState({
+				operator: null,
+				prevValue: null
+			});
+			return;
+		} else if (val.value === '+' || val.value === '-' || val.value === '*' || val.value === '/') {
+			this.setState({
+				operator: val.value,
+				prevValue: this.state.value,
 				value: '0'
 			});
 			return;
@@ -30,7 +64,7 @@ class Calculator extends Component {
 	render() {
 		return (
 			<div className='main-calc'>
-				<Display value={this.state.value} />
+				<Display value={this.state.value || 0} />
 				<div className='calc-line'>
 					<Button value='0' className='number' updateDisplay={this.updateDisplay} />
 					<Button value='1' className='number' updateDisplay={this.updateDisplay} />
